@@ -6,8 +6,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using GetWebSitesToJPG.Models;
-namespace GetWebSitesToJPG
+using GetAutoRefreshedImage.Models;
+
+namespace GetAutoRefreshedImage
 {
     public class EmailService : IIdentityMessageService
     {

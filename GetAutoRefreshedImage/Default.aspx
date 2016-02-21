@@ -7,7 +7,7 @@
     </div>
     <div class="row">
         <div>
-            <h3>Select event date and time</h3>
+            <h3>Select date and time for event</h3>
             <asp:TextBox runat="server" id="txt_Date" CssClass="datepicker"/>
             <button class="btn btn-primary">Save Date</button>
         </div>
