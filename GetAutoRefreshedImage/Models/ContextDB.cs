@@ -1,4 +1,6 @@
 ﻿using System.Data.Entity;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GetAutoRefreshedImage.Models
 {
@@ -9,6 +11,12 @@ namespace GetAutoRefreshedImage.Models
             
         }
 
-        //public DbSet<ImageCropData> ImageCropData { get; set; }
+        public DbSet<UrlsDatesMapping> UrlsDatesMapping { get; set; }
+    }
+    public partial class UrlsDatesMapping
+    {
+        [Key]
+        public string IdUrl { get; set; }
+        public DateTime EventDateTime { get; set; }
     }
 }

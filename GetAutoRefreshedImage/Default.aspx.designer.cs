@@ -13,6 +13,24 @@ namespace GetAutoRefreshedImage {
     public partial class _Default {
         
         /// <summary>
+        /// ModalPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel ModalPanel;
+        
+        /// <summary>
+        /// UrlGenerated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal UrlGenerated;
+        
+        /// <summary>
         /// txt_Date control.
         /// </summary>
         /// <remarks>
