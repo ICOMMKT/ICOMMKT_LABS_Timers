@@ -13,6 +13,8 @@ namespace GetAutoRefreshedImage
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Off;
             routes.EnableFriendlyUrls(settings);
+
+            routes.Add(new Route("{imageID}", new RouteHandler()));
         }
     }
 }

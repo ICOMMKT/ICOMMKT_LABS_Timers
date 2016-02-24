@@ -19,6 +19,15 @@ namespace GetAutoRefreshedImage.Logic
                 _db.SaveChanges();
             }
         }
+        public DateTime? GetDate(string idUrl)
+        {
+            DateTime? date = null;
+            if(!string.IsNullOrEmpty(idUrl))
+            {
+                date = _db.UrlsDatesMapping.Where(x => x.IdUrl == idUrl).Select(x => x.EventDateTime).SingleOrDefault();
+            }
+            return date;
+        }
 
         public void Dispose()
         {
