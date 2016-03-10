@@ -1,4 +1,5 @@
 ﻿using GetAutoRefreshedImage.Logic;
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,21 +18,28 @@ namespace GetAutoRefreshedImage
 
         public void ProcessRequest(HttpContext context)
         {
-            Image image = null;//TODO: Create method to retrieve image
+            MagickImageCollection image = null;//TODO: Create method to retrieve image
 
             var imageId = (string)RequestContext.RouteData.Values["imageID"];
             var hasContent = imageId == null ? false : true;
+
             if (hasContent)
             {
                 var dbAction = new DBActions();
                 var eventDate = dbAction.GetDate(imageId);
+                //ImageConverter converter = new ImageConverter();
                 if (eventDate != null)
                 {
-                    image = ImageRenderMethods.CreateGIF((DateTime)eventDate);
+                    //DateTime TestDateTime = new DateTime(2016, 03, 10, 11, 55, 00);
+                    var imageRender = new ImageRenderMethods();
+                    image = imageRender.CreateGIF(TestDateTime);
                 }
-                ImageConverter converter = new ImageConverter();
-                byte[] buffer = (byte[])converter.ConvertTo(image, typeof(byte[]));
-                context.Response.ContentType = "image/jpg";
+                //var path = RequestContext.HttpContext.Server.MapPath("/Content/Images");
+                //path += "\\test.gif";
+                //image.Write(path);
+                var imageGif = ImageRenderMethods.GetMemoryStreamResult(image);
+                byte[] buffer = imageGif.ToArray();
+                context.Response.ContentType = "image/gif";
                 context.Response.BinaryWrite(buffer);
                 context.Response.Flush();
             }
