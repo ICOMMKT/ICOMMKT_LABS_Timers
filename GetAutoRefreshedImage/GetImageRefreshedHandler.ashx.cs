@@ -3,6 +3,7 @@ using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
@@ -10,7 +11,7 @@ using System.Web.Routing;
 namespace GetAutoRefreshedImage
 {
     /// <summary>
-    /// Summary description for GetImageRefreshedHandler
+    /// Create a .gif image counter 
     /// </summary>
     public class GetImageRefreshedHandler : IHttpHandler
     {
@@ -18,7 +19,7 @@ namespace GetAutoRefreshedImage
 
         public void ProcessRequest(HttpContext context)
         {
-            MagickImageCollection image = null;//TODO: Create method to retrieve image
+            MemoryStream image = null;
 
             var imageId = (string)RequestContext.RouteData.Values["imageID"];
             var hasContent = imageId == null ? false : true;
@@ -27,18 +28,13 @@ namespace GetAutoRefreshedImage
             {
                 var dbAction = new DBActions();
                 var eventDate = dbAction.GetDate(imageId);
-                //ImageConverter converter = new ImageConverter();
                 if (eventDate != null)
                 {
-                    //DateTime TestDateTime = new DateTime(2016, 03, 10, 11, 55, 00);
-                    var imageRender = new ImageRenderMethods();
-                    image = imageRender.CreateGIF(TestDateTime);
+                    //DateTime TestDateTime = new DateTime(2016, 03, 15, 11, 55, 00);
+                    image = ImageRenderMethods.CreateGIF((DateTime)eventDate);
                 }
-                //var path = RequestContext.HttpContext.Server.MapPath("/Content/Images");
-                //path += "\\test.gif";
-                //image.Write(path);
-                var imageGif = ImageRenderMethods.GetMemoryStreamResult(image);
-                byte[] buffer = imageGif.ToArray();
+
+                byte[] buffer = image.ToArray();
                 context.Response.ContentType = "image/gif";
                 context.Response.BinaryWrite(buffer);
                 context.Response.Flush();

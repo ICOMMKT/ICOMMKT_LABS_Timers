@@ -10,11 +10,13 @@ using System.Web;
 
 namespace GetAutoRefreshedImage.Logic
 {
-    public class ImageRenderMethods
+    public static class ImageRenderMethods
     {
-        DateTime _eventDate, _dateTimeNow;
-        //MagickImageCollection imageCollection = null;
-
+        /// <summary>
+        /// Draw image
+        /// </summary>
+        /// <param name="text">Text to Draw</param>
+        /// <returns>Image Object</returns>
         private static Image DrawText(string text)
         {
             Font font = new Font("Arial", 12);
@@ -56,40 +58,33 @@ namespace GetAutoRefreshedImage.Logic
         /// <summary>
         /// Create .gif Image
         /// </summary>
-        /// <param name="eventDate"></param>
+        /// <param name="eventDate">DateTime to be rendered</param>
         /// <returns>Gif Image</returns>
         //TODO: Return a MagickImageCollection object 
-        public MagickImageCollection CreateGIF(DateTime eventDate)
+        public static MemoryStream CreateGIF(DateTime eventDate)
         {
-            _dateTimeNow = DateTime.Now;
-            _eventDate = eventDate;
+            var _dateTimeNow = DateTime.Now;
             MagickImageCollection imageCollection = null;
 
-            var hoursleft = (_eventDate - _dateTimeNow);
+            var hoursleft = (eventDate - _dateTimeNow);
             var text = hoursleft.ToString();
             if (hoursleft < TimeSpan.Zero)
             {
-                //imageCollection = new MagickImageCollection();
                 text = "Your event is already outdated";
-                //imageProperties.Text = text;
-
                 imageCollection = FramesGeneration(imageCollection, text, 0);
             }
             else
             {
                 int counter = 0;
-
-                while (counter != 295)
+                //set for 10 minutes
+                var seconds = hoursleft.Seconds;
+                if(seconds > 590)
                 {
-                    //Task timeTask = Task.Run(() =>
-                    //{
-                    //await Task.Delay(2000);
-                    //do stuff here
-                    //    GifTimer();
-                    //});
-                    //timeTask.RunSynchronously();
-                    //timeTask.Wait();
-                    imageCollection = FramesGeneration(imageCollection, hoursleft.ToString(), counter);
+                    seconds = 590;
+                }
+                while (counter != seconds)
+                {
+                    imageCollection = FramesGeneration(imageCollection, hoursleft.ToString(@"hh\:mm\:ss"), counter);
                     eventDate = eventDate.AddSeconds(-1);
                     hoursleft = (eventDate - _dateTimeNow);
                     counter++;
@@ -100,13 +95,17 @@ namespace GetAutoRefreshedImage.Logic
             settings.Colors = 256;
             imageCollection.Quantize(settings);
 
-            //imageCollection.Optimize();
-
-            return imageCollection;
+            return GetMemoryStreamResult(imageCollection);
         }
 
-        
 
+        /// <summary>
+        /// Generates frames for .gif image
+        /// </summary>
+        /// <param name="imageCollection">Object for Stack Images</param>
+        /// <param name="text">Text to be Draw</param>
+        /// <param name="counter">Stack number</param>
+        /// <returns></returns>
         public static MagickImageCollection FramesGeneration(MagickImageCollection imageCollection, string text, int counter)
         {
             Image image = null;
@@ -129,7 +128,8 @@ namespace GetAutoRefreshedImage.Logic
             return imageCollection;
         }
 
-        private void GifTimer()
+        [Obsolete]
+        private static void GifTimer()
         {
             //await Task.Delay(100);
             Timer aTimer = new Timer();
@@ -140,6 +140,11 @@ namespace GetAutoRefreshedImage.Logic
             //return imageCollection;
         }
 
+        /// <summary>
+        /// transform into a Memory Stream object
+        /// </summary>
+        /// <param name="imageGif">Object to be transformed</param>
+        /// <returns>Memory Stream object</returns>
         public static MemoryStream GetMemoryStreamResult(MagickImageCollection imageGif)
         {
             MemoryStream ms = new MemoryStream();
@@ -148,9 +153,10 @@ namespace GetAutoRefreshedImage.Logic
             return ms;
         }
 
-        void T_Tick(object sender, EventArgs e)
+        [Obsolete]
+        static void T_Tick(object sender, EventArgs e)
         {
-            TimeSpan ts = _eventDate.Subtract(_dateTimeNow);
+            //TimeSpan ts = _eventDate.Subtract(_dateTimeNow);
             //imageCollection = FramesGeneration(imageCollection, ts.ToString(), 0);
         }
     }
